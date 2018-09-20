@@ -10,16 +10,16 @@ describe('User model', () => {
   })
 
   describe('instanceMethods', () => {
-    describe('correctPassword', () => {
-      let cody
-
-      beforeEach(async () => {
-        cody = await User.create({
-          email: 'cody@puppybook.com',
-          password: 'bones'
-        })
+    let cody
+    beforeEach(async () => {
+      cody = await User.create({
+        firstName: 'Cody',
+        telephone: '5555555555',
+        password: 'bones'
       })
+    })
 
+    describe('correctPassword', () => {
       it('returns true if the password is correct', () => {
         expect(cody.correctPassword('bones')).to.be.equal(true)
       })
@@ -28,5 +28,12 @@ describe('User model', () => {
         expect(cody.correctPassword('bonez')).to.be.equal(false)
       })
     }) // end describe('correctPassword')
+
+    describe.only('findByTelephone', () => {
+      it('returns the user that has the given telephone', async () => {
+        const user = await User.findByTelephone('5555555555')
+        expect(user.firstName).to.equal(cody.firstName)
+      })
+    })
   }) // end describe('instanceMethods')
 }) // end describe('User model')

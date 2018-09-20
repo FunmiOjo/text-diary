@@ -46,6 +46,15 @@ User.prototype.correctPassword = function(candidatePwd) {
 /**
  * classMethods
  */
+
+User.findByTelephone = function(telephone) {
+  return User.findOne({
+    where: {
+      telephone
+    }
+  })
+}
+
 User.generateSalt = function() {
   return crypto.randomBytes(16).toString('base64')
 }
