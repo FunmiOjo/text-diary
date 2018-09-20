@@ -15,9 +15,9 @@
       Text Diary allows you to write in your diary through text messages.  To get started, fill in your name, phone number and password in the form below.
     </p>
 
-    <form>
+    <form action="/auth/signup" method="post">
       <div>
-        <label for="firstName">
+        <label for="firstName" autofocus="true">
           <span>First Name:</span>
           <strong>*</strong>
         </label>
@@ -29,7 +29,7 @@
           <span>Phone Number:</span>
           <strong>*</strong>
         </label>
-        <input type="text" id="phoneNumber" name="phoneNumber" />
+        <input type="tel" id="phoneNumber" name="phoneNumber" />
       </div>
 
       <div>
@@ -37,11 +37,11 @@
           <span>Password:</span>
           <strong>*</strong>
         </label>
-        <input type="text" id="password" name="password" />
+        <input type="password" id="password" name="password" />
       </div>
 
       <p>
-        <button>
+        <button type="submit">
           Submit
         </button>
       </p>
