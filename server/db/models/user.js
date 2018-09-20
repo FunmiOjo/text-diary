@@ -1,6 +1,7 @@
 const crypto = require('crypto')
 const Sequelize = require('sequelize')
 const db = require('../db')
+const { addUSCode } = require('./helpers')
 
 const User = db.define('user', {
   firstName: {
@@ -46,11 +47,14 @@ User.prototype.correctPassword = function(candidatePwd) {
 /**
  * classMethods
  */
+User.beforeValidate(function(userInstance) {
+  userInstance.telephone = addUSCode(userInstance.telephone)
+})
 
 User.findByTelephone = function(telephone) {
-  return User.findOne({
+  return this.findOne({
     where: {
-      telephone
+      telephone: telephone
     }
   })
 }
