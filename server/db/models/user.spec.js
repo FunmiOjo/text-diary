@@ -4,7 +4,7 @@ const {expect} = require('chai')
 const db = require('../index')
 const User = db.model('user')
 
-describe.only('User model', () => {
+describe('User model', () => {
   let cody
   beforeEach(() => {
     return db.sync({force: true})
@@ -51,5 +51,12 @@ describe.only('User model', () => {
         expect(user.firstName).to.equal(cody.firstName)
       })
     })
+
   }) // end describe('instanceMethods')
 }) // end describe('User model')
+
+
+
+//Two people suggested that I send a Slack to the person but I felt like I got what I deserved for being late.
+
+//I got kind of frustrated this afternoon because my linter stopped working and I couldn't get a hook on my user model for the diary to work. It turns out that I misunderstood the hook syntax. The same thing happened in the Pillars checkpoint. I don't know if it's me or if the docs are unclear.
