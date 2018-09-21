@@ -1,11 +1,17 @@
 const router = require('express').Router()
 const { MessagingResponse } = require('twilio').twiml
 const { User, Entry } = require('../db/models')
+const { isCommand } = require('./helpers')
 
 router.post('/', async (req, res) => {
   try {
     const { Body: body, From: telephone } = req.body
     const user = await User.findByTelephone(telephone)
+
+    if (isCommand) {
+
+    }
+
     const newEntry = await Entry.create({
       body,
       userId: user.id
