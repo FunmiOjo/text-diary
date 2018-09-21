@@ -5,7 +5,7 @@ const db = require('../index')
 const User = db.model('user')
 const Entry = db.model('entry')
 
-describe.only('Entry model', () => {
+describe('Entry model', () => {
   let cody
   let entry1
   let entry2
@@ -33,7 +33,7 @@ describe.only('Entry model', () => {
       })
     })
 
-    describe.only('getUserEntriesByDay', () => {
+    describe('getUserEntriesByDay', () => {
       it('returns all the entries written by a user on a particular day', async () => {
         const entries = await Entry.getUserEntriesByDay(cody.id, new Date())
         let retrievedEntry1
