@@ -50,7 +50,7 @@ describe('Entry model', () => {
         expect(entries).to.be.an('array')
         expect(entries.length).to.equal(2)
         expect(retrievedEntry1.body).to.equal(entry1.body)
-        expect(retrievedEntry1.body).to.equal(entry1.body)
+        expect(retrievedEntry2.body).to.equal(entry2.body)
       })
 
     })

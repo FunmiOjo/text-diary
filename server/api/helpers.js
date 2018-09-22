@@ -1,9 +1,10 @@
 //cmd entry day 9-20-2018
-const { Entry } = require('../db/models')
 
 //constants
 const DAY = 'day'
 const ENTRY = 'entry'
+const DATE = 'DATE'
+const GET_USER_ENTRIES_BY_DAY = 'GET_USER_ENTRIES_BY_DAY'
 
 const isCommand = message => {
   return message.slice(0, 3).toLowerCase() === 'cmd'
@@ -27,9 +28,19 @@ const executeDateSearch = (userId, params) => {
 
   switch (dateType) {
     case DAY:
-      return Entry.getUserEntriesByDay(userId, providedDate)
+      return {
+        funcName: GET_USER_ENTRIES_BY_DAY,
+        args: [userId, providedDate]
+      }
     default:
       return new Error('Incorrect date type')
+  }
+}
+
+const getSearchType = term => {
+  const dateTerms = ['day', 'month', 'week', 'year']
+  if (dateTerms.indexOf(term) !== -1) {
+    return DATE
   }
 }
 
@@ -38,30 +49,35 @@ const executeEntrySearchCommand = (userId, params) => {
     return new Error('No arguments provided')
   }
 
-  const searchType = params[0]
-
+  const searchType = getSearchType(params[0])
   switch (searchType) {
-    case searchType instanceof Date:
-      return executeDateSearch(params.slice(1), userId)
+    case (DATE):
+      return executeDateSearch(userId, params)
     default:
+      return new Error('Incorrectly formed date argument')
   }
 }
 
 const executeCommand = (userId, message) => {
   const command = message.slice(0, 3)
-  const params = message.slice(3).split(' ')
-
-  switch (command) {
+  const params = message.slice(4).split(' ')
+  const firstParam = params[0]
+  switch (firstParam) {
     case ENTRY:
-      return executeEntrySearchCommand(params.slice(1), userId)
+      return executeEntrySearchCommand(userId, params.slice(1))
     default:
       return new Error('Provided command is not an available command')
   }
+}
+
+const concatenateEntryBodies = entries => {
+  return entries.map(entry => entry.body).join('\n\n')
 }
 
 module.exports = {
   isCommand,
   executeDateSearch,
   executeEntrySearchCommand,
-  executeCommand
+  executeCommand,
+  concatenateEntryBodies
 }

@@ -12,17 +12,23 @@ const Entry = db.define('entry', {
   }
 })
 
-Entry.getUserEntriesByDay = function(userId, date) {
-  const { min, max } = getMinMaxDateforOneDay(date)
-  return this.findAll({
-    where: {
-      userId: userId,
-      createdAt: {
-        [Op.gte]: min,
-        [Op.lte]: max
+Entry.getUserEntriesByDay = function (userId, date) {
+  try {
+    const { min, max } = getMinMaxDateforOneDay(date)
+    const entries = this.findAll({
+      where: {
+        userId: userId,
+        createdAt: {
+          [Op.gte]: min,
+          [Op.lt]: max
+        }
       }
-    }
-  })
+    })
+    return entries
+  } catch (error) {
+    return error
+  }
+
 }
 
 module.exports = Entry
