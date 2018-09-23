@@ -3,11 +3,10 @@ const {MessagingResponse} = require('twilio').twiml
 const {User, Entry} = require('../db/models')
 const {
   isCommand,
-  executeDateSearch,
-  executeEntrySearchCommand,
-  executeCommand,
-  concatenateEntryBodies
+  getCommandMessageParts
 } = require('./helpers')
+
+const { getRequestedAction } = require('./commands')
 
 router.post('/', async (req, res) => {
   try {
@@ -15,16 +14,16 @@ router.post('/', async (req, res) => {
     const user = await User.findByTelephone(telephone)
 
     if (isCommand(body)) {
-      const response = executeCommand(user.id, body)
-      const {funcName, args} = response
-      console.log('response', response, 'funcName', funcName, 'args', args)
-      const entries = await Entry.getUserEntriesByDay(...args)
-      const message = concatenateEntryBodies(entries)
+      const { commands, args } = getCommandMessageParts(body)
+      console.log('commands: ', commands, 'args: ', args)
+      const action = getRequestedAction(commands)
+      const message = await action(user.id, args)
 
       const twiml = new MessagingResponse()
       twiml.message(message)
       res.writeHead(200, {'Content-Type': 'text/xml'})
       res.end(twiml.toString())
+
     } else {
       const newEntry = await Entry.create({
         body,
@@ -48,11 +47,16 @@ router.post('/', async (req, res) => {
 })
 
 router.get('/', async (req, res) => {
-  const date = new Date('9-20-2018')
-  const result = executeCommand(1, 'cmd entry day 9-20-2018')
-  const {funcName, args} = result
-  console.log('result', result, 'funcName', funcName, 'args', args)
-  const entries = await Entry.getUserEntriesByDay(...args)
-  res.send(entries)
+  try {
+    const body = 'cmd mood day 9-21-2018'
+    const { commands, args } = getCommandMessageParts(body)
+    console.log('commmands: ', commands, 'args: ', args)
+    const action = getRequestedAction(commands)
+    const mood = await action(1, args)
+    console.log('mood', mood)
+    res.send(mood)
+  } catch (error) {
+    res.send(error)
+  }
 })
 module.exports = router

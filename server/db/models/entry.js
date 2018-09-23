@@ -28,7 +28,8 @@ Entry.getUserEntriesByDay = function (userId, date) {
   } catch (error) {
     return error
   }
-
 }
+
+Entry.getUserEntriesByDay = Entry.getUserEntriesByDay.bind(Entry)
 
 module.exports = Entry

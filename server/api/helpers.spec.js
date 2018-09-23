@@ -3,7 +3,7 @@ const { executeDateSearch } = require('./helpers')
 const { Entry } = require('../db/models')
 
 const GET_USER_ENTRIES_BY_DAY = 'GET_USER_ENTRIES_BY_DAY'
-describe('Entry command methods', () => {
+xdescribe('Entry command methods', () => {
 
   let entry1
   let entry2
