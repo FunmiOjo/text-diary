@@ -24,6 +24,7 @@ const getUserEntriesBetweenDates = async (userId, args) => {
     if (!entries.length) {
       return 'No entries found from the dates provided'
     }
+
     return concatenateEntryBodies(entries)
   } catch (error) {
     return error
@@ -37,6 +38,14 @@ const getMoodNamesInCorrectForm = tone => {
 
   if (tone.tone_id === 'anger') {
     tone.tone_id = 'angry'
+  }
+
+  if (tone.tone_id === 'joy') {
+    tone.tone_id = 'joyful'
+  }
+
+  if (tone.tone_id === 'fear') {
+    tone.tone_id = 'fearful'
   }
 
   return tone.tone_id
@@ -56,7 +65,7 @@ const getMoodByDay = async (userId, args) => {
     if (knownEmotions.length) {
       return knownEmotions.map(getMoodNamesInCorrectForm).join(', ')
     } else {
-      return 'Not sure but possibly ' + tones.map(getMoodNamesInCorrectForm).join(', ')
+      return 'Not sure but possibly ' + tones.map(getMoodNamesInCorrectForm)[0]
     }
   } catch (error) {
     return error
