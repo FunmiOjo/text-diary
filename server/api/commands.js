@@ -8,6 +8,9 @@ const getUserEntriesByDay = async (userId, args) => { //args is array
     const dates = args.map(arg => new Date(arg))
 
     const entries = await Entry.getUserEntriesByDay(userId, ...dates)
+    if (!entries.length) {
+      return 'No entries found from the dates provided'
+    }
     return concatenateEntryBodies(entries)
   } catch (error) {
     return error
@@ -18,6 +21,9 @@ const getUserEntriesBetweenDates = async (userId, args) => {
   try {
     const dates = args.map(arg => new Date(arg))
     const entries = await Entry.getUserEntriesBetweenDates(userId, ...dates)
+    if (!entries.length) {
+      return 'No entries found from the dates provided'
+    }
     return concatenateEntryBodies(entries)
   } catch (error) {
     return error
@@ -39,6 +45,9 @@ const getMoodNamesInCorrectForm = tone => {
 const getMoodByDay = async (userId, args) => {
   try {
     const text = await getUserEntriesByDay(userId, args)
+    if (text === 'No entries found from the dates provided') {
+      return text
+    }
     const toneAnalysis = await getMood(text)
     const { tones } = toneAnalysis.document_tone
     tones.sort((a, b) => b.score - a.score)
@@ -57,6 +66,9 @@ const getMoodByDay = async (userId, args) => {
 const getMoodBetweenDates = async (userId, args) => {
   try {
     const text = await getUserEntriesBetweenDates(userId, args)
+    if (text === 'No entries found from the dates provided') {
+      return text
+    }
     const toneAnalysis = await getMood(text)
     const { tones } = toneAnalysis.document_tone
     tones.sort((a, b) => b.score - a.score)

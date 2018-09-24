@@ -48,7 +48,7 @@ router.post('/', async (req, res) => {
 
 router.get('/', async (req, res) => {
   try {
-    const body = 'cmd mood dates 9-20-2018 9-23-2018'
+    const body = 'cmd mood dates 8-20-2018 8-23-2018'
     const { commands, args } = getCommandMessageParts(body)
     console.log('commmands: ', commands, 'args: ', args)
     const action = getRequestedAction(commands)
