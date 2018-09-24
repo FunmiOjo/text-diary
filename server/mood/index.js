@@ -4,7 +4,7 @@ const axios = require('axios')
 
 const toneAnalyzer = new ToneAnalyzerV3({
   version: '2017-09-21',
-  iam_apikey: process.env.TA_API_KEY ||TA_API_KEY,
+  iam_apikey: process.env.TA_API_KEY || TA_API_KEY,
   url: 'https://gateway-wdc.watsonplatform.net/tone-analyzer/api'
 })
 
