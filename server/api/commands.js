@@ -14,6 +14,16 @@ const getUserEntriesByDay = async (userId, args) => { //args is array
   }
 }
 
+const getUserEntriesBetweenDates = async (userId, args) => {
+  try {
+    const dates = args.map(arg => new Date(arg))
+    const entries = await Entry.getUserEntriesBetweenDates(userId, ...dates)
+    return concatenateEntryBodies(entries)
+  } catch (error) {
+    return error
+  }
+}
+
 const getMoodNamesInCorrectForm = tone => {
   if (tone.tone_id === 'sadness') {
     tone.tone_id = 'sad'
@@ -32,7 +42,7 @@ const getMoodByDay = async (userId, args) => {
     const toneAnalysis = await getMood(text)
     const { tones } = toneAnalysis.document_tone
     tones.sort((a, b) => b.score - a.score)
-    let knownEmotions = tones.filter(tone => tone.score >= 0.75)
+    let knownEmotions = tones.filter(tone => tone.score >= 0.7)
 
     if (knownEmotions.length) {
       return knownEmotions.map(getMoodNamesInCorrectForm).join(', ')
@@ -44,14 +54,32 @@ const getMoodByDay = async (userId, args) => {
   }
 }
 
+const getMoodBetweenDates = async (userId, args) => {
+  try {
+    const text = await getUserEntriesBetweenDates(userId, args)
+    const toneAnalysis = await getMood(text)
+    const { tones } = toneAnalysis.document_tone
+    tones.sort((a, b) => b.score - a.score)
+    let knownEmotions = tones.filter(tone => tone.score >= 0.7)
+
+    if (knownEmotions.length) {
+      return knownEmotions.map(getMoodNamesInCorrectForm).join(', ')
+    } else {
+      return 'Not sure but possibly ' + tones.map(getMoodNamesInCorrectForm)[0]
+    }
+  } catch (error) {
+    return error
+  }
+}
+
 const commands = {
   entry: {
     day: getUserEntriesByDay,
-    dates: 'GET_USER_ENTRIES_BY_DATES'
+    dates: getUserEntriesBetweenDates
   },
   mood: {
     day: getMoodByDay,
-    dates: 'GET_MOOD_BY_DATES'
+    dates: getMoodBetweenDates
   }
 }
 
@@ -66,7 +94,6 @@ const getRequestedAction = args => {
   }
   return node
 }
-
 
 module.exports = {
   commands,
