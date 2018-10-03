@@ -1,9 +1,10 @@
 const crypto = require('crypto')
 const Sequelize = require('sequelize')
 const db = require('../db')
+const { addUSCode } = require('./helpers')
 
 const User = db.define('user', {
-  name: {
+  firstName: {
     type:  Sequelize.STRING,
     validate: {
       notEmpty: true
@@ -46,6 +47,18 @@ User.prototype.correctPassword = function(candidatePwd) {
 /**
  * classMethods
  */
+User.beforeValidate(function(userInstance) {
+  userInstance.telephone = addUSCode(userInstance.telephone)
+})
+
+User.findByTelephone = function(telephone) {
+  return this.findOne({
+    where: {
+      telephone: telephone
+    }
+  })
+}
+
 User.generateSalt = function() {
   return crypto.randomBytes(16).toString('base64')
 }

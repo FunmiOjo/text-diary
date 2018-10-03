@@ -4,9 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "scripts": {
+    "deploy": "script/deploy",
     "lint": "eslint ./ --ignore-path .gitignore",
     "lint-fix": "npm run lint -- --fix",
     "precommit": "# lint-staged # un-comment to enable",
@@ -14,7 +12,7 @@
     "prettify": "prettier --write \"**/*.{js,jsx,json,css,scss,md}\"",
     "postinstall": "touch secrets.js",
     "seed": "node script/seed.js",
-    "start": "nodemon server",
+    "start": "node server",
     "start-dev": "npm run start-server",
     "start-server": "nodemon server -e html,js,scss --ignore public --ignore client",
     "test": "NODE_ENV='test' mocha \"./server/**/*.spec.js\" \"./client/**/*.spec.js\" \"./script/**/*.spec.js\" --require @babel/polyfill --require @babel/register"
@@ -36,11 +34,14 @@
   "dependencies": {
     "axios": "^0.18.0",
     "compression": "^1.7.3",
+    "express": "^4.16.3",
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "pg": "^7.4.3",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^4.38.1"
+    "sequelize": "^4.38.1",
+    "twilio": "^3.19.2",
+    "watson-developer-cloud": "^3.10.0"
   },
   "devDependencies": {
     "@babel/core": "^7.1.0",
@@ -65,12 +66,9 @@
     "enzyme-adapter-react-16": "^1.5.0",
     "eslint": "^5.6.0",
     "eslint-config-fullstack": "^6.0.0",
-    "eslint-config-prettier": "^3.0.1",
     "eslint-plugin-react": "^7.11.1",
     "husky": "^0.14.3",
-    "lint-staged": "^7.3.0",
     "mocha": "^5.2.0",
-    "nodemon": "^1.18.4",
     "npm-merge-driver": "^2.3.5",
     "prettier": "^1.14.3",
     "react-test-renderer": "^16.5.2",

@@ -1,3 +1,4 @@
+const path = require('path')
 const router = require('express').Router()
 const User = require('../db/models/user')
 module.exports = router
@@ -21,11 +22,13 @@ router.post('/login', async (req, res, next) => {
 
 router.post('/signup', async (req, res, next) => {
   try {
-    const user = await User.create(req.body)
-    req.login(user, err => (err ? next(err) : res.json(user)))
+    const { firstName, telephone, password } = req.body
+    const user = await User.create({ firstName, telephone, password })
+    req.login(user, err => (err ? next(err) : res.sendFile(path.join(__dirname, '../../client', 'successfulSignUp.html'))))
+
   } catch (err) {
     if (err.name === 'SequelizeUniqueConstraintError') {
-      res.status(401).send('User already exists')
+      res.status(401).sendFile(path.join(__dirname, '../../client/alreadySignedUp.html'))
     } else {
       next(err)
     }
